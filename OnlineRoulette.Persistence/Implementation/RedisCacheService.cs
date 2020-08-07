@@ -1,5 +1,7 @@
 ﻿using OnlineRoulette.Persistence.Interfaces;
 using StackExchange.Redis;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace OnlineRoulette.Persistence.Implementation
@@ -19,6 +21,20 @@ namespace OnlineRoulette.Persistence.Implementation
         {
             var db = _multiplexer.GetDatabase();
             await db.StringSetAsync(key: key, value: value);
+        }
+
+        public IEnumerable<KeyValuePair<string, object>> GetAll()
+        {
+            var result = new List<KeyValuePair<string, object>>();
+            var endpoints = _multiplexer.GetEndPoints();
+            var server = _multiplexer.GetServer(endpoint: endpoints.First());
+
+            var keys = server.Keys(database: 0);
+            foreach (var key in keys)
+            {
+                result.Add(new KeyValuePair<string, object>(key: key.ToString(),value: key));
+            }
+            return result;
         }
 
         #region Constructors

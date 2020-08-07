@@ -1,3 +1,4 @@
+using EasyCaching.Core.Configurations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -29,6 +30,18 @@ namespace OnlineRoulette.API
                 setupAction.Configuration = Configuration.GetValue<string>("RedisConnection");
                 setupAction.InstanceName = Configuration.GetValue<string>("InstanceName");
             });
+
+            services.AddEasyCaching(options =>
+            {
+                //use redis cache
+                options.UseRedis(redisConfig =>
+                {
+                    //Setup connection
+                    redisConfig.DBConfig.Endpoints.Add(new ServerEndPoint(host: Configuration.GetValue<string>("RedisConnectionHost"), port: Configuration.GetValue<int>("RedisConnectionPort")));
+                    redisConfig.DBConfig.AllowAdmin = true;
+                }, "roulette");
+            });
+
             services.AddScoped<IRouletteBusiness, RouletteBusiness>();
             services.AddScoped<IPlayerBusiness, PlayerBusiness>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));

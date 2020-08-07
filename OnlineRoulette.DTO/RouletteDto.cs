@@ -6,10 +6,10 @@ namespace OnlineRoulette.DTO
     public class RouletteDto
     {
         public Guid Id { get; set; }
-        public RouletteStateEnum Status { get; set; }
+        public string Status { get; set; }
 
         #region Constructors
-        public RouletteDto(Guid id, RouletteStateEnum status)
+        public RouletteDto(Guid id, string status)
         {
             Id = id;
             Status = status;

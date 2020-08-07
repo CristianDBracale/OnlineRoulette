@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Caching.Distributed;
+﻿using EasyCaching.Core;
+using Microsoft.Extensions.Caching.Distributed;
 using Online.Roulette.Entities;
 using OnlineRoulette.DAL.Interfaces;
 using System.Collections.Generic;
@@ -7,8 +8,8 @@ namespace OnlineRoulette.DAL.Implementation
 {
     public class RepositoryPlayer : Repository<Player>, IRepositoryPlayer
     {
-        public RepositoryPlayer(IDistributedCache cache)
-            : base(cache, "players") { }
+        public RepositoryPlayer(IDistributedCache cache, IEasyCachingProvider cachingProvider)
+            : base(cache, "players", cachingProvider) { }
 
         public string CreateNewPlayer()
         {

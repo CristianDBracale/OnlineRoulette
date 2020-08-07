@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Online.Roulette.Entities;
+using OnlineRoulette.DTO;
 using OnlineRoulette.Gateway.DataInterfaces;
 using System;
+using System.Collections.Generic;
 
 namespace OnlineRoulette.API.Controllers
 {
@@ -112,24 +114,24 @@ namespace OnlineRoulette.API.Controllers
         }
 
         // GET: api/Roulette
-        //[HttpGet("GetAll")]
-        //public IActionResult GetAll()
-        //{
-        //    try
-        //    {
-        //        List<Roulette> roulettes = _rouletteBusiness.GetAll();
-        //        List<RouletteDto> rouletteDtos = new List<RouletteDto>();
-        //        foreach (Roulette roulette in roulettes)
-        //        {
-        //            rouletteDtos.Add(new RouletteDto(roulette.Id, roulette.State));
-        //        }
+        [HttpGet("GetAll")]
+        public IActionResult GetAll()
+        {
+            try
+            {
+                List<Roulette> roulettes = _rouletteBusiness.GetAll();
+                List<RouletteDto> rouletteDtos = new List<RouletteDto>();
+                foreach (Roulette roulette in roulettes)
+                {
+                    rouletteDtos.Add(new RouletteDto(roulette.Id, roulette.State.ToString()));
+                }
 
-        //        return Ok(rouletteDtos);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
+                return Ok(rouletteDtos);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

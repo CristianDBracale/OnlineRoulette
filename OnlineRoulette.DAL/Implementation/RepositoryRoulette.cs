@@ -1,18 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using EasyCaching.Core;
 using Microsoft.Extensions.Caching.Distributed;
 using Online.Roulette.Entities;
 using OnlineRoulette.DAL.Interfaces;
 using OnlineRoulette.Enums;
 using OnlineRoulette.SharedTypes;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace OnlineRoulette.DAL.Implementation
 {
     public class RepositoryRoulette : Repository<Roulette>, IRepositoryRoulette
     {
-        public RepositoryRoulette(IDistributedCache cache)
-            : base(cache, "roulettes") { }
+        public RepositoryRoulette(IDistributedCache cache, IEasyCachingProvider cachingProvider)
+            : base(cache, "roulettes", cachingProvider) { }
 
         public long CloseBetsById(string id)
         {
@@ -38,12 +39,7 @@ namespace OnlineRoulette.DAL.Implementation
 
         public List<Roulette> GetAll()
         {
-            return GetAllObjectAsync(id: "roulettes");
-        }
-
-        public List<Roulette> GetAllObjectAsync(string id)
-        {
-            throw new NotImplementedException();
+            return GetAllObjects();
         }
 
         public Roulette GetById(string id)

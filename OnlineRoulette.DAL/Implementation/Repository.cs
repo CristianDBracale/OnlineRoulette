@@ -1,7 +1,10 @@
-﻿using Microsoft.Extensions.Caching.Distributed;
+﻿using EasyCaching.Core;
+using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
+using Online.Roulette.Entities;
 using OnlineRoulette.DAL.Interfaces;
 using ServiceStack;
+using System.Collections.Generic;
 
 namespace OnlineRoulette.DAL.Implementation
 {
@@ -9,6 +12,8 @@ namespace OnlineRoulette.DAL.Implementation
     {
         private readonly IDistributedCache _cacheName;
         private readonly string _cacheKey;
+
+        private IEasyCachingProvider _cachingProvider;
 
         public TEntity GetObjectAsync(string idRoulette)
         {
@@ -29,11 +34,27 @@ namespace OnlineRoulette.DAL.Implementation
             _cacheName.SetString(key: cacheKey, value: serializedObjectToCache);
         }
 
+        public List<TEntity> GetAllObjects()
+        {
+            IDictionary<string, CacheValue<Roulette>> iDictionaryRouletes = _cachingProvider.GetByPrefix<Roulette>("roulettes");
+            List<TEntity> listRoulettes = new List<TEntity>();
+            foreach (KeyValuePair<string, CacheValue<Roulette>> cacheValue in iDictionaryRouletes)
+            {
+                string cacheKey = $"{cacheValue.Key}";
+                string cacheName = _cacheName.GetString(key: cacheKey);
+                var roulette = JsonConvert.DeserializeObject<TEntity>(cacheName);
+                listRoulettes.Add(roulette);
+            }
+
+            return listRoulettes;
+        }
+
         #region Constructors
-        public Repository(IDistributedCache cache, string cacheKey)
+        public Repository(IDistributedCache cache, string cacheKey, IEasyCachingProvider cachingProvider)
         {
             _cacheName = cache;
             _cacheKey = cacheKey;
+            _cachingProvider = cachingProvider;
         }
         #endregion
     }
