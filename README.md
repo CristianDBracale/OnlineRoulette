@@ -18,4 +18,4 @@ _Creador:_
 * **Cristian David Bracale** - *Trabajo Completo* 
 
 ---
-⌨️ con ❤️ por [CristianDBracale](https://github.com/CristianDBracale) 😊
+⌨️ con ❤️ por [CristianDBracale](https://www.linkedin.com/in/cristianbracale/) 😊
